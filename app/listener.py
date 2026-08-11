@@ -1,10 +1,10 @@
 # Listen to bind socket to 3099, accept connections, and handle incoming data
 import socket
 import json
-from datetime import datetime, UTC
+from datetime import datetime, UTC, timedelta
 
 from db import session_factory
-from models import Reading
+from models import Notification, Reading, Subscriber
 
 HOST = "127.0.0.1"
 PORT = 3099
@@ -30,6 +30,18 @@ def handle_client(conn, addr):
                 if trimmed:
                     process_pulse(trimmed)
 
+def trigger_notification(session, bib):
+    subscribers = session.query(Subscriber).filter(Subscriber.bib == bib).all()
+
+    for subscriber in subscribers:
+        notification = Notification(
+            bib=bib,
+            subscriber_id=subscriber.id,
+            status="pending"
+        )
+        session.add(notification)
+
+    print(f"Queued {len(subscribers)} notifications for bib={bib}")
 
 def process_pulse(raw):
     try:
@@ -38,32 +50,42 @@ def process_pulse(raw):
         print(f"Bad JSON, skipping: {raw!r}")
         return
 
-    # TODO (Bamboo): skip if message["Invalid"] is True
     if message.get("Invalid") is True:
         print(f"Invalid message, skipping: {raw!r}")
         return
 
-    # TODO (Bamboo): pull the bib out (message["Bib"]), cast to int
     try:
         bib = int(message["Bib"])
     except (KeyError, ValueError):
         print(f"Missing or invalid Bib, skipping: {raw!r}")
         return  
 
-    # TODO (Bamboo): open a session from session_factory, create a
-    # Reading(bib=..., timestamp=datetime.utcnow()), add + commit,
-    # close the session. Print the row after commit to confirm it wrote.
     session = session_factory()
     try:
-        reading = Reading(bib=bib, timestamp=datetime.now(UTC))
+        timestamp = datetime.now(UTC)
+        reading = Reading(bib=bib, timestamp=timestamp)
+
+        cutoff = timestamp - timedelta(seconds=60)
+        duplicate = session.query(Reading).filter(
+            Reading.bib == bib,
+            Reading.timestamp > cutoff
+        ).first()
+
+        if duplicate:
+            print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
+        else:
+            trigger_notification(session, bib)
+
         session.add(reading)
         session.commit()
-        print(f"Row written: bib={bib}")
+        print(f"Row written: bib={bib}, timestamp={timestamp}")
     except Exception as e:
         print(f"Error writing row: {e}")
         session.rollback()
     finally:
         session.close()
+
+    
 
 
 def start_listener():
