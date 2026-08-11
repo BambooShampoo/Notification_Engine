@@ -41,6 +41,8 @@ def trigger_notification(session, bib):
         )
         session.add(notification)
 
+    session.commit()
+
     print(f"Queued {len(subscribers)} notifications for bib={bib}")
 
 def process_pulse(raw):
@@ -71,14 +73,20 @@ def process_pulse(raw):
             Reading.timestamp > cutoff
         ).first()
 
-        if duplicate:
-            print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
-        else:
-            trigger_notification(session, bib)
+        
 
         session.add(reading)
         session.commit()
         print(f"Row written: bib={bib}, timestamp={timestamp}")
+
+        if duplicate:
+            print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
+        else:
+            try:
+                trigger_notification(session, bib)
+            except Exception as e:
+                print(f"Error triggering notification for bib={bib}: {e}")
+
     except Exception as e:
         print(f"Error writing row: {e}")
         session.rollback()
