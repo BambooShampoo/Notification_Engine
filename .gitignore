@@ -1,0 +1,20 @@
+.env
+*.json          # service account key files - careful, this also ignores any legit JSON you add later
+ 
+# Data
+data/*.db
+data/*.db-wal
+data/*.db-shm
+ 
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+ 
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+ 

@@ -30,12 +30,13 @@ def handle_client(conn, addr):
                 if trimmed:
                     process_pulse(trimmed)
 
-def trigger_notification(session, bib):
+def trigger_notification(session, bib, timing_point):
     subscribers = session.query(Subscriber).filter(Subscriber.bib == bib).all()
 
     for subscriber in subscribers:
         notification = Notification(
             bib=bib,
+            timing_point=timing_point,
             subscriber_id=subscriber.id,
             status="pending"
         )
@@ -62,28 +63,38 @@ def process_pulse(raw):
         print(f"Missing or invalid Bib, skipping: {raw!r}")
         return  
 
+    
+    try:
+        timing_point = message["TimingPoint"]
+    except KeyError:
+        print(f"Missing TimingPoint, skipping: {raw!r}")
+        return
+
     session = session_factory()
     try:
         timestamp = datetime.now(UTC)
-        reading = Reading(bib=bib, timestamp=timestamp)
-
-        cutoff = timestamp - timedelta(seconds=60)
-        duplicate = session.query(Reading).filter(
-            Reading.bib == bib,
-            Reading.timestamp > cutoff
-        ).first()
-
-        
+        reading = Reading(bib=bib, timing_point=timing_point, timestamp=timestamp)
 
         session.add(reading)
         session.commit()
         print(f"Row written: bib={bib}, timestamp={timestamp}")
 
+        cutoff = timestamp - timedelta(seconds=60)
+        duplicate = session.query(Reading).filter(
+            Reading.bib == bib,
+            Reading.timing_point == timing_point,
+            Reading.timestamp > cutoff,
+            Reading.id != reading.id
+        ).first()
+
+        
+
+
         if duplicate:
             print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
         else:
             try:
-                trigger_notification(session, bib)
+                trigger_notification(session, bib, timing_point)
             except Exception as e:
                 print(f"Error triggering notification for bib={bib}: {e}")
 

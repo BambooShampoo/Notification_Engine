@@ -12,7 +12,7 @@ class Participant(Base):
     __tablename__ = "participants"
 
     id = Column(Integer, primary_key=True)
-    bib = Column(String, unique=True, nullable=False)
+    bib = Column(Integer, unique=True, nullable=False)
     name = Column(String, nullable=False)
 
     subscribers = relationship("Subscriber", back_populates="participant")
@@ -22,7 +22,7 @@ class Subscriber(Base):
     __tablename__ = "subscribers"
 
     id = Column(Integer, primary_key=True)
-    bib = Column(String, ForeignKey("participants.bib"), nullable=False)
+    bib = Column(Integer, ForeignKey("participants.bib"), nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     subscribed_at = Column(DateTime, server_default=func.now(), nullable=False)
@@ -39,10 +39,11 @@ class Reading(Base):
 
     id = Column(Integer, primary_key=True)
     bib = Column(Integer, nullable=False)
+    timing_point = Column(String, nullable=True)
     timestamp = Column(DateTime, nullable=False) 
 
     __table_args__ = (
-        (Index("idx_readings_bib_timestamp", "bib", "timestamp")),
+        (Index("idx_readings_bib_timestamp", "bib", "timing_point", "timestamp")),
     )
 
 
@@ -50,7 +51,8 @@ class Notification(Base):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True)
-    bib = Column(String, nullable=False)
+    bib = Column(Integer, nullable=False)
+    timing_point = Column(String, nullable=True)
     subscriber_id = Column(Integer, ForeignKey("subscribers.id"), nullable=False)
     status = Column(SAEnum("pending", "sent", "failed", name="notification_status"), nullable=False)
     attempts = Column(Integer, default=0)
