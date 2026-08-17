@@ -1,3 +1,4 @@
+# messenger.py
 import time
 from datetime import datetime, UTC, timedelta
 from config import RESEND_API_KEY, RESEND_FROM_EMAIL
@@ -51,7 +52,7 @@ def resolve_message(session, notification):
     timing_point = notification.timing_point
 
     subject = f"Timing update for Athlete {participant.name}"
-    body = f"<p>Hello {subscriber.name},</p><p>{f"Athlete {participant.name} has just crossed the {timing_point} timing point!"}</p>"
+    body = f"<p>Hello {subscriber.name},</p><p>Athlete {participant.name} has just crossed the {timing_point} timing point!</p>"
 
     return subscriber.email, subject, body
 
@@ -98,8 +99,10 @@ def process_notification(session, notification):
         notification.attempts += 1
         notification.last_attempt_at = datetime.now(UTC)
         notification.error_message = error_message
+        notification.status = "failed"
         if notification.attempts >= MAX_ATTEMPTS:
-            notification.status = "failed"
+            print(f"Notification id={notification.id} failed after {MAX_ATTEMPTS} attempts. Giving up.")
+        
 
     session.commit()
 

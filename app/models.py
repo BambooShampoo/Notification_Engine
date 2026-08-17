@@ -1,3 +1,5 @@
+# model.py
+
 from sqlalchemy import (
     Column, Index, Integer, String, ForeignKey, DateTime, UniqueConstraint,func,Enum as SAEnum
 )

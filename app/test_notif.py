@@ -1,3 +1,5 @@
+# test_notif.py
+
 """
 Seeds one Participant, one Subscriber, and one pending Notification
 so the dispatch worker has something real to process.
@@ -11,9 +13,9 @@ from models import Participant, Subscriber, Notification
 
 # EDIT THESE before running
 TEST_BIB = 6080
-TEST_PARTICIPANT_NAME = "David DuMa"
-TEST_SUBSCRIBER_NAME = "Tyler"
-TEST_SUBSCRIBER_EMAIL = "tylernvmt@gmail.com"  # use an address you can check
+TEST_PARTICIPANT_NAME = "Carlos Garia"
+TEST_SUBSCRIBER_NAME = "Chloe"
+TEST_SUBSCRIBER_EMAIL = "limbaroc.chloe@gmail.com"  # use an address you can check
 TEST_TIMING_POINT = "FINISH"
 
 
