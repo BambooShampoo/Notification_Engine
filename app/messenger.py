@@ -142,8 +142,8 @@ def process_notification(session, notification):
 
 def run_worker(queue):
     set_queue(queue)
-    add_log("MESSENGER", datetime.now(UTC), "dispatch worker started","INFO")
-    print("Dispatch worker starting...")
+    add_log("MESSENGER", datetime.now(UTC), "Messenger worker started","INFO")
+    print("Messenger worker starting...")
     while True:
         session = session_factory()
         try:

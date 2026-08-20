@@ -130,7 +130,7 @@ def process_pulse(raw):
 
 def start_listener(queue):
     set_queue(queue)
-    add_log("LISTENER", datetime.now(UTC), "starting listener","INFO")
+    add_log("LISTENER", datetime.now(UTC), "Starting listener","INFO")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind((HOST, PORT))
