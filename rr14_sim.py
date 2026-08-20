@@ -8,7 +8,9 @@ PORT = 3099
 # string in this list. Don't forget these need to end with the \t
 # delimiter your listener splits on.
 PULSES = [
-    '{"ID":109,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
+    #'{"ID":110,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8398}\t',
+    #'{"ID":100,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
+    '{"ID":104,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
 ]
 
 

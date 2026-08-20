@@ -1,6 +1,7 @@
 # messenger.py
 import time
 from datetime import datetime, UTC, timedelta
+from zoneinfo import ZoneInfo
 from config import RESEND_API_KEY, RESEND_FROM_EMAIL
 import resend
 import os
@@ -48,18 +49,19 @@ def resolve_message(session, notification):
     subscriber = session.query(Subscriber).filter(Subscriber.id == notification.subscriber_id).first()
     if not subscriber:
         raise ValueError(f"No subscriber found for id {notification.subscriber_id}")
+    
+    now = datetime.now(UTC)
+    timeofday = now.astimezone(ZoneInfo("America/Los_Angeles")).strftime("%I:%M%p").lstrip("0")
 
     timing_point = notification.timing_point
-
     subject = f"Timing update for Athlete {participant.name}"
     body = f"""
     <body>
         <p>Hello {subscriber.name}!</p>
-        <p>Athlete {participant.name} has just crossed the {timing_point} timing point!</p>
-        <p>For additional information, visit the event website at https://sportstats.one.</p>
-        <p>All the best,</p>
-        <p>Tyler From SportStats West</p>
-        <p><i>This is an automated message from SportStats West. Please do not reply to this email.</i></p>
+        <p>Athlete {participant.name} has crossed the {timing_point} timing point at {timeofday}!
+        <br>For additional information and to see their results, visit the event website at https://sportstats.one.
+        <br><br>All the best,<br>Tyler From SportStats West
+        <br><br><i>This is an automated message from SportStats West. Please do not reply to this email.</i></p>
     </body>
     """
         
