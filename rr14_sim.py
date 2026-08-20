@@ -10,7 +10,7 @@ PORT = 3099
 PULSES = [
     #'{"ID":110,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8398}\t',
     #'{"ID":100,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
-    '{"ID":104,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
+    '{"ID":105,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":7}\t',
 ]
 
 
