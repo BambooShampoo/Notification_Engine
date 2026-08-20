@@ -6,6 +6,7 @@ from datetime import datetime, UTC, timedelta
 
 from db import session_factory
 from models import Notification, Reading, Subscriber
+from load_participants import load_participants
 
 HOST = "127.0.0.1"
 PORT = 3099
@@ -121,4 +122,5 @@ def start_listener():
 
 
 if __name__ == "__main__":
+    load_participants()
     start_listener()
