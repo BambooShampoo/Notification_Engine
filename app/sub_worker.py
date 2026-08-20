@@ -6,7 +6,7 @@ import csv
 from time import sleep
 import requests
 
-from models import Log, Participant, Subscriber
+from models import Participant, Subscriber
 
 def fetch_csv(url):
     """Fetch CSV data from a URL and return it as a list of dictionaries."""
@@ -53,13 +53,12 @@ def add_subscribers_from_csv(csv_data, session):
             session.rollback()
 
     print(f"Added {count_added} subscribers to the database.")
-    
 
-if __name__ == "__main__":
+def run_sub_worker():
+    """Run the sub-worker to fetch and add subscribers from Google Sheets."""
     from db import session_factory
     from config import GOOGLE_SHEETS_CSV_URL
 
-    # fetch every 20 seconds
     while True:
         session = session_factory()
         try:
@@ -69,8 +68,12 @@ if __name__ == "__main__":
             print(f"Error processing subscribers: {e}")
         finally:
             session.close()
-        sleep(20)
+        sleep(20)  # Wait for 20 seconds before the next fetch
         print("Waiting 20 seconds before next fetch...")
+    
+
+if __name__ == "__main__":
+    run_sub_worker()
 
     
     

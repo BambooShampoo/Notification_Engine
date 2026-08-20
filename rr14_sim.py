@@ -8,7 +8,7 @@ PORT = 3099
 # string in this list. Don't forget these need to end with the \t
 # delimiter your listener splits on.
 PULSES = [
-    '{"ID":108,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8006}\t',
+    '{"ID":108,"PID":8,"TimingPoint":"STARTFINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
 ]
 
 
@@ -20,7 +20,7 @@ def main():
         for pulse in PULSES:
             s.sendall(pulse.encode("utf-8"))
             print(f"Sent: {pulse.strip()}")
-            time.sleep(1)  # TODO (Bamboo): adjust or remove, just spacing sends out so you can watch listener output per-pulse
+            time.sleep(1)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ from sqlalchemy import (create_engine, event)
 from sqlalchemy.orm import sessionmaker
 from models import Base
 
+LOGGING = False  # Set to True to enable SQLAlchemy logging
+
 # Define the path to the SQLite database file
 BASE_DIR = os.path.dirname(__file__)          # points to app/
 DB_PATH = os.path.join(BASE_DIR, "../data/sportstats.db")  # points to data/sportstats.db
@@ -12,7 +14,7 @@ DB_PATH = os.path.join(BASE_DIR, "../data/sportstats.db")  # points to data/spor
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
 # Create the database engine and session factory
-engine = create_engine(f"sqlite:///{DB_PATH}", echo=True, connect_args={"check_same_thread": False})
+engine = create_engine(f"sqlite:///{DB_PATH}", echo=LOGGING, connect_args={"check_same_thread": False})
 print(f"Engine created successfully with DB_PATH: {DB_PATH}")
 
 @event.listens_for(engine, "connect")
