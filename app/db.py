@@ -22,6 +22,7 @@ print(f"Engine created successfully with DB_PATH: {DB_PATH}")
 def set_wal_mode(dbapi_conn, connection_record):
     cursor = dbapi_conn.cursor()
     cursor.execute("PRAGMA journal_mode=WAL;")
+    cursor.execute("PRAGMA busy_timeout=5000;")  # wait up to 5s for a lock before raising
     cursor.close()
 
 # Create database tables if they don't exist

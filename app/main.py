@@ -25,11 +25,17 @@ if __name__ == "__main__":
         user_input = input("Type 'exit' to terminate the application: ")
         if user_input.strip().lower() == "exit":
             print("Terminating all processes...")
-            listener_process.terminate()
-            sub_worker_process.terminate()
-            dispatch_worker_process.terminate()
+            for process in (
+                listener_process,
+                sub_worker_process,
+                dispatch_worker_process,
+            ):
+                process.terminate()
             break
 
-    listener_process.join()
-    sub_worker_process.join()
-    dispatch_worker_process.join()
+    for process in (
+        listener_process,
+        sub_worker_process,
+        dispatch_worker_process,
+    ):
+        process.join()

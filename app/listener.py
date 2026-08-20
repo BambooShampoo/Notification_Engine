@@ -1,5 +1,7 @@
 # listener.py
 # Listen to bind socket to 3099, accept connections, and handle incoming data
+from sqlalchemy.exc import OperationalError
+import time
 import socket
 import json
 from datetime import datetime, UTC, timedelta
@@ -32,21 +34,27 @@ def handle_client(conn, addr):
                 if trimmed:
                     process_pulse(trimmed)
 
-def trigger_notification(session, bib, timing_point):
-    subscribers = session.query(Subscriber).filter(Subscriber.bib == bib).all()
+def trigger_notification(session, bib, timing_point, max_retries):
+    for attempt in range(max_retries):
+            try:
+                subscribers = session.query(Subscriber).filter(Subscriber.bib == bib).all()
+                for subscriber in subscribers:
+                    notification = Notification(
+                        bib=bib,
+                        timing_point=timing_point,
+                        subscriber_id=subscriber.id,
+                        status="pending"
+                    )
+                    session.add(notification)
+                session.commit()
+                print(f"Queued {len(subscribers)} notifications for bib={bib}")
+                return
+            except OperationalError as e:
+                session.rollback()
+                print(f"DB locked, retrying ({attempt+1}/{max_retries}): {e}")
+                time.sleep(0.5 * (attempt + 1))
 
-    for subscriber in subscribers:
-        notification = Notification(
-            bib=bib,
-            timing_point=timing_point,
-            subscriber_id=subscriber.id,
-            status="pending"
-        )
-        session.add(notification)
-
-    session.commit()
-
-    print(f"Queued {len(subscribers)} notifications for bib={bib}")
+    print(f"Failed to queue notifications for bib={bib} after {max_retries} attempts")
 
 def process_pulse(raw):
     try:
@@ -96,7 +104,7 @@ def process_pulse(raw):
             print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
         else:
             try:
-                trigger_notification(session, bib, timing_point)
+                trigger_notification(session, bib, timing_point, 3)
             except Exception as e:
                 print(f"Error triggering notification for bib={bib}: {e}")
 

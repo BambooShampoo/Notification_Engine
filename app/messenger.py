@@ -59,7 +59,7 @@ def resolve_message(session, notification):
     <body>
         <p>Hello {subscriber.name}!</p>
         <p>Athlete {participant.name} has crossed the {timing_point} timing point at {timeofday}!
-        <br>For additional information and to see their results, visit the event website at https://sportstats.one.
+        <br><br>For additional information and to see their results, visit the event website at https://sportstats.one.
         <br><br>Thanks for following the race,<br>Tyler From SportStats West
         <br><br><i>This is an automated message from SportStats West. Please do not reply to this email.</i></p>
     </body>
