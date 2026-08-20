@@ -63,11 +63,11 @@ class Notification(Base):
     error_message = Column(String, nullable=True)
 
 
-class SyncState(Base):
-    __tablename__ = "sync_state"
+# class SyncState(Base):
+#     __tablename__ = "sync_state"
 
-    id = Column(Integer, primary_key=True)
-    last_row_index = Column(Integer, nullable=False)
+#     id = Column(Integer, primary_key=True)
+#     last_row_index = Column(Integer, nullable=False)
 
 
 class Log(Base):

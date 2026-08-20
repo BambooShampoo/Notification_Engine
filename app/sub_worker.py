@@ -43,7 +43,7 @@ def add_subscribers_from_csv(csv_data, session):
         # Add subscriber logic here (assuming a Subscriber model exists)
         subscriber = Subscriber(bib=bib, name=name, email=email)
         if session.query(Subscriber).filter_by(bib=bib, email=email).first():
-            print(f"Subscriber already exists: {name} <{email}> for bib={bib}")
+            print(f"Subscriber already exists: {name} for bib={bib}")
             continue  # Skip if subscriber already exists
         try:
             session.add(subscriber)

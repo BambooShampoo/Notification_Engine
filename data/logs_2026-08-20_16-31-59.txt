@@ -1,0 +1,49 @@
+2026-08-20 23:27:12.121760: [INFO] MAIN - added participants from CSV to database
+2026-08-20 23:27:13.193716: [INFO] MESSENGER - Messenger worker started
+2026-08-20 23:27:13.193716: [INFO] LISTENER - Starting listener
+2026-08-20 23:27:13.193716: [INFO] SUB_WORKER - Starting sub-worker
+2026-08-20 23:27:13.193716: [INFO] LISTENER - Listening for RR14 on 127.0.0.1:3099
+2026-08-20 23:27:14.577952: [INFO] SUB_WORKER - Added subscriber: Bamboo Shampoo for bib=6868
+2026-08-20 23:27:43.507425: [INFO] LISTENER - RR14 connected from ('127.0.0.1', 52445)
+2026-08-20 23:27:43.507425: [INFO] LISTENER - Row written in Reading: bib=6767, timing_point=START, timestamp=2026-08-20 23:27:43.507425+00:00
+2026-08-20 23:27:44.507682: [INFO] LISTENER - Row written in Reading: bib=8398, timing_point=START, timestamp=2026-08-20 23:27:44.507682+00:00
+2026-08-20 23:27:45.508014: [INFO] LISTENER - Row written in Reading: bib=8397, timing_point=START, timestamp=2026-08-20 23:27:45.508014+00:00
+2026-08-20 23:27:46.508731: [INFO] LISTENER - Row written in Reading: bib=7, timing_point=START, timestamp=2026-08-20 23:27:46.508731+00:00
+2026-08-20 23:27:47.509170: [INFO] LISTENER - Row written in Reading: bib=6868, timing_point=START, timestamp=2026-08-20 23:27:47.509170+00:00
+2026-08-20 23:27:47.516074: [INFO] LISTENER - Queued notification for bib=6868, timing_point=START, subscriber_id=1
+2026-08-20 23:27:48.214820: [INFO] MESSENGER - Processing notification: id=1
+2026-08-20 23:27:48.220869: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete Tyler Nguyen
+2026-08-20 23:27:48.509984: [INFO] LISTENER - RR14 disconnected
+2026-08-20 23:27:48.835695: [INFO] MESSENGER - Notification id=1 sent successfully
+2026-08-20 23:29:07.797941: [INFO] SUB_WORKER - Added subscriber: Tyler for bib=6767
+2026-08-20 23:29:43.503250: [INFO] LISTENER - RR14 connected from ('127.0.0.1', 59690)
+2026-08-20 23:29:43.503250: [INFO] LISTENER - Row written in Reading: bib=6767, timing_point=SPLIT1, timestamp=2026-08-20 23:29:43.503250+00:00
+2026-08-20 23:29:43.516937: [INFO] LISTENER - Queued notification for bib=6767, timing_point=SPLIT1, subscriber_id=2
+2026-08-20 23:29:43.875643: [INFO] MESSENGER - Processing notification: id=2
+2026-08-20 23:29:43.876677: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete MinhT Nguyen
+2026-08-20 23:29:44.375683: [INFO] MESSENGER - Notification id=2 sent successfully
+2026-08-20 23:29:44.503860: [INFO] LISTENER - Row written in Reading: bib=8398, timing_point=SPLIT1, timestamp=2026-08-20 23:29:44.503860+00:00
+2026-08-20 23:29:45.504598: [INFO] LISTENER - Row written in Reading: bib=8397, timing_point=SPLIT1, timestamp=2026-08-20 23:29:45.504598+00:00
+2026-08-20 23:29:46.505255: [INFO] LISTENER - Row written in Reading: bib=7, timing_point=SPLIT1, timestamp=2026-08-20 23:29:46.505255+00:00
+2026-08-20 23:29:47.505614: [INFO] LISTENER - Row written in Reading: bib=6868, timing_point=SPLIT1, timestamp=2026-08-20 23:29:47.505614+00:00
+2026-08-20 23:29:47.512485: [INFO] LISTENER - Queued notification for bib=6868, timing_point=SPLIT1, subscriber_id=1
+2026-08-20 23:29:48.505925: [INFO] LISTENER - RR14 disconnected
+2026-08-20 23:29:49.380156: [INFO] MESSENGER - Processing notification: id=3
+2026-08-20 23:29:49.380156: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete Tyler Nguyen
+2026-08-20 23:29:49.861665: [INFO] MESSENGER - Notification id=3 sent successfully
+2026-08-20 23:31:43.502553: [INFO] LISTENER - RR14 connected from ('127.0.0.1', 57869)
+2026-08-20 23:31:43.502553: [INFO] LISTENER - Row written in Reading: bib=6767, timing_point=FINISH, timestamp=2026-08-20 23:31:43.502553+00:00
+2026-08-20 23:31:43.510135: [INFO] LISTENER - Queued notification for bib=6767, timing_point=FINISH, subscriber_id=2
+2026-08-20 23:31:44.503848: [INFO] LISTENER - Row written in Reading: bib=8398, timing_point=FINISH, timestamp=2026-08-20 23:31:44.503848+00:00
+2026-08-20 23:31:44.904076: [INFO] MESSENGER - Processing notification: id=4
+2026-08-20 23:31:44.905077: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete MinhT Nguyen
+2026-08-20 23:31:45.474607: [INFO] MESSENGER - Notification id=4 sent successfully
+2026-08-20 23:31:45.504537: [INFO] LISTENER - Row written in Reading: bib=8397, timing_point=FINISH, timestamp=2026-08-20 23:31:45.504537+00:00
+2026-08-20 23:31:46.504839: [INFO] LISTENER - Row written in Reading: bib=7, timing_point=FINISH, timestamp=2026-08-20 23:31:46.504839+00:00
+2026-08-20 23:31:47.505380: [INFO] LISTENER - Row written in Reading: bib=6868, timing_point=FINISH, timestamp=2026-08-20 23:31:47.505380+00:00
+2026-08-20 23:31:47.509449: [INFO] LISTENER - Queued notification for bib=6868, timing_point=FINISH, subscriber_id=1
+2026-08-20 23:31:48.505663: [INFO] LISTENER - RR14 disconnected
+2026-08-20 23:31:50.478000: [INFO] MESSENGER - Processing notification: id=5
+2026-08-20 23:31:50.479141: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete Tyler Nguyen
+2026-08-20 23:31:51.172495: [INFO] MESSENGER - Notification id=5 sent successfully
+2026-08-20 23:31:59.311721: [INFO] MAIN - Terminating all processes
