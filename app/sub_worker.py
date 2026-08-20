@@ -68,8 +68,8 @@ def run_sub_worker():
             print(f"Error processing subscribers: {e}")
         finally:
             session.close()
-        sleep(20)  # Wait for 20 seconds before the next fetch
-        print("Waiting 20 seconds before next fetch...")
+        sleep(10)  # Wait for 10 seconds before the next fetch
+        print("Waiting 10 seconds before next fetch...")
     
 
 if __name__ == "__main__":
