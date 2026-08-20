@@ -1,0 +1,35 @@
+2026-08-20 23:09:55.565658: [INFO] MAIN - added participants from CSV to database
+2026-08-20 23:09:56.675491: [INFO] SUB_WORKER - Starting sub-worker
+2026-08-20 23:09:56.676050: [INFO] LISTENER - starting listener
+2026-08-20 23:09:56.676050: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:09:56.676570: [INFO] LISTENER - Listening for RR14 on 127.0.0.1:3099
+2026-08-20 23:09:56.710014: [INFO] MESSENGER - dispatch worker started
+2026-08-20 23:10:08.259554: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:10:19.785843: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:10:31.518401: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:10:43.050695: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:10:54.356928: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:11:05.889221: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:11:17.472750: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:11:28.710967: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:11:40.177995: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:11:51.591303: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:12:03.134259: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:12:14.586741: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:12:20.648647: [INFO] LISTENER - RR14 connected from ('127.0.0.1', 61956)
+2026-08-20 23:12:20.648647: [INFO] LISTENER - Row written in Reading: bib=6767, timing_point=SPLIT1, timestamp=2026-08-20 23:12:20.648647+00:00
+2026-08-20 23:12:20.685466: [INFO] LISTENER - Queued notification for bib=6767, timing_point=SPLIT1, subscriber_id=1
+2026-08-20 23:12:21.649008: [INFO] LISTENER - Row written in Reading: bib=8398, timing_point=SPLIT1, timestamp=2026-08-20 23:12:21.649008+00:00
+2026-08-20 23:12:21.763165: [INFO] MESSENGER - Processing notification: id=1
+2026-08-20 23:12:21.768516: [INFO] MESSENGER - attempting to send email: Subject: Timing update for Athlete MinhT Nguyen
+2026-08-20 23:12:22.504539: [INFO] MESSENGER - Notification id=1 sent successfully
+2026-08-20 23:12:22.649672: [INFO] LISTENER - Row written in Reading: bib=8397, timing_point=SPLIT1, timestamp=2026-08-20 23:12:22.649672+00:00
+2026-08-20 23:12:23.650342: [INFO] LISTENER - Row written in Reading: bib=7, timing_point=SPLIT1, timestamp=2026-08-20 23:12:23.650342+00:00
+2026-08-20 23:12:24.650572: [INFO] LISTENER - Row written in Reading: bib=6868, timing_point=SPLIT1, timestamp=2026-08-20 23:12:24.650572+00:00
+2026-08-20 23:12:25.651183: [INFO] LISTENER - RR14 disconnected
+2026-08-20 23:12:26.369021: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:12:37.986502: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:12:49.355006: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:13:00.830591: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:13:12.323487: [INFO] SUB_WORKER - Fetching subscribers from Google Sheets
+2026-08-20 23:13:16.568517: [INFO] MAIN - Terminating all processes

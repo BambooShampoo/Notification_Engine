@@ -72,8 +72,8 @@ class SyncState(Base):
 
 class Log(Base):
     __tablename__ = "logs"
-
     id = Column(Integer, primary_key=True)
-    message = Column(String, nullable=False)
-    severity = Column(String, nullable=False)
+    source = Column(String, nullable=False)      # was "log_type": LISTENER, MESSENGER, etc.
     timestamp = Column(DateTime, server_default=func.now(), nullable=False)
+    message = Column(String, nullable=False)      # was "log_message"
+    severity = Column(String, nullable=True)      # optional severity level (INFO, ERROR, etc.)

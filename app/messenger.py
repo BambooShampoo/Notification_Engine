@@ -5,9 +5,10 @@ from zoneinfo import ZoneInfo
 from config import RESEND_API_KEY, RESEND_FROM_EMAIL
 import resend
 import os
+from log_queue import add_log, set_queue
 
 from db import session_factory
-from models import Notification, Reading, Subscriber, Participant
+from models import Notification, Subscriber, Participant
 
 POLL_INTERVAL_SECONDS = 5  # NFR-1: dispatch within 5s of ingestion
 MAX_ATTEMPTS = 3
@@ -36,6 +37,7 @@ def get_dispatchable_notifications(session):
 
 
 
+
 def resolve_message(session, notification):
     """
     Build the email subject/body for this notification.
@@ -44,10 +46,13 @@ def resolve_message(session, notification):
 
     participant = session.query(Participant).filter(Participant.bib == notification.bib).first()
     if not participant:
+        add_log("MESSENGER", datetime.now(UTC), f"No participant found for bib {notification.bib}","ERROR")
         raise ValueError(f"No participant found for bib {notification.bib}")
+    
 
     subscriber = session.query(Subscriber).filter(Subscriber.id == notification.subscriber_id).first()
     if not subscriber:
+        add_log("MESSENGER", datetime.now(UTC), f"No subscriber found for id {notification.subscriber_id}","ERROR")
         raise ValueError(f"No subscriber found for id {notification.subscriber_id}")
     
     now = datetime.now(UTC)
@@ -71,14 +76,12 @@ def resolve_message(session, notification):
 
 
     
-
-
 def send_via_resend(to_email, subject, body):
     """
     Call the Resend API to send the email.
     """
     try:
-
+        add_log("MESSENGER", datetime.now(UTC), f"attempting to send email: Subject: {subject}","INFO")
         if resend is not None:
             resend.api_key = os.environ.get("RESEND_API_KEY") or RESEND_API_KEY
 
@@ -92,6 +95,7 @@ def send_via_resend(to_email, subject, body):
         print(f"Resend API response: {r}")
 
     except Exception as e:
+        add_log("MESSENGER", datetime.now(UTC), f"Error sending email: {e}","ERROR")
         return False, str(e)
 
     return True, None
@@ -100,27 +104,45 @@ def process_notification(session, notification):
     """
     Attempt to send one notification and update its row accordingly.
     """
+    add_log("MESSENGER", datetime.now(UTC), f"Processing notification: id={notification.id}","INFO")
 
-    to_email, subject, body = resolve_message(session, notification)
+    try:
+        to_email, subject, body = resolve_message(session, notification)
+
+    except Exception as e:
+        add_log("MESSENGER", datetime.now(UTC), f"Error resolving message for notification id={notification.id}: {e}","ERROR")
+        print(f"Error resolving message for notification id={notification.id}: {e}")
+        notification.status = "failed"
+        notification.attempts += 1
+        notification.last_attempt_at = datetime.now(UTC)
+        session.commit()
+        return
 
     success, error_message = send_via_resend(to_email, subject, body)
 
     if success:
+        notification.attempts += 1
         notification.status = "sent"
         notification.sent_at = datetime.now(UTC)
+        add_log("MESSENGER", datetime.now(UTC), f"Notification id={notification.id} sent successfully","INFO")
     else:
         notification.attempts += 1
         notification.last_attempt_at = datetime.now(UTC)
         notification.error_message = error_message
         notification.status = "failed"
+        add_log("MESSENGER", datetime.now(UTC), f"Notification id={notification.id} failed: {error_message}","ERROR")
         if notification.attempts >= MAX_ATTEMPTS:
+            add_log("MESSENGER", datetime.now(UTC), f"Notification id={notification.id} failed after {MAX_ATTEMPTS} attempts. Giving up.","ERROR")
             print(f"Notification id={notification.id} failed after {MAX_ATTEMPTS} attempts. Giving up.")
         
 
     session.commit()
+    return
 
 
-def run_worker():
+def run_worker(queue):
+    set_queue(queue)
+    add_log("MESSENGER", datetime.now(UTC), "dispatch worker started","INFO")
     print("Dispatch worker starting...")
     while True:
         session = session_factory()
@@ -129,6 +151,7 @@ def run_worker():
             for notification in notifications:
                 process_notification(session, notification)
         except Exception as e:
+            add_log("MESSENGER", datetime.now(UTC), f"Worker loop error: {e}","ERROR")
             print(f"Worker loop error: {e}")
         finally:
             session.close()
@@ -136,5 +159,3 @@ def run_worker():
         time.sleep(POLL_INTERVAL_SECONDS)
 
 
-if __name__ == "__main__":
-    run_worker()

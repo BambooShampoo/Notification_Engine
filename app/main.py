@@ -6,36 +6,64 @@ from listener import start_listener
 from sub_worker import run_sub_worker
 from messenger import run_worker
 from load_participants import load_participants
+from multiprocessing import Queue, Process
+from log_queue import write_log, add_log, export_log, set_queue
+from datetime import datetime, UTC
+
 
 if __name__ == "__main__":
+    shared_log_queue = Queue()
+    set_queue(shared_log_queue)  # so main.py's own add_log() calls work too
+
     # Load participants from CSV into the database
     load_participants()
+    add_log("MAIN", datetime.now(UTC), "added participants from CSV to database","INFO")
+
 
     # Start the listener, subscription worker, and dispatch worker in separate processes
-    listener_process = Process(target=start_listener)
-    sub_worker_process = Process(target=run_sub_worker)
-    dispatch_worker_process = Process(target=run_worker)
+    listener_process = Process(target=start_listener, args=(shared_log_queue,))
+    sub_worker_process = Process(target=run_sub_worker, args=(shared_log_queue,))
+    dispatch_worker_process = Process(target=run_worker, args=(shared_log_queue,))
+    log_process = Process(target=write_log, args=(shared_log_queue,))
 
     listener_process.start()
     sub_worker_process.start()
     dispatch_worker_process.start()
+    log_process.start()
 
     # on input "exit"from the console, terminate all processes
     while True:
         user_input = input("Type 'exit' to terminate the application: ")
         if user_input.strip().lower() == "exit":
-            print("Terminating all processes...")
-            for process in (
-                listener_process,
-                sub_worker_process,
-                dispatch_worker_process,
-            ):
-                process.terminate()
             break
+
+    add_log("MAIN", datetime.now(UTC), "Terminating all processes","INFO")
+    print("Terminating all processes...")
+
+    add_log(None, None, None, None)  # Signal the log process to terminate
 
     for process in (
         listener_process,
         sub_worker_process,
-        dispatch_worker_process,
+        dispatch_worker_process
+    ):
+        process.terminate()
+
+    log_process.join(timeout=5)
+    if log_process.is_alive():
+        add_log("MAIN", datetime.now(UTC), "Warning: log process did not exit cleanly, forcing termination","WARNING")
+        print("Warning: log process did not exit cleanly, forcing termination")
+    log_process.terminate()
+    log_process.join()
+    
+    for process in (
+        listener_process,
+        sub_worker_process,
+        dispatch_worker_process
     ):
         process.join()
+    add_log("MAIN", datetime.now(UTC), "All processes terminated","INFO")
+    print("All processes terminated.")
+    export_log()
+    add_log("MAIN", datetime.now(UTC), f"Log exported to data/logs_{datetime.now(UTC)}.txt","INFO")
+    

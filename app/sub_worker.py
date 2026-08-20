@@ -6,7 +6,9 @@ import csv
 from time import sleep
 import requests
 
+from log_queue import add_log, set_queue
 from models import Participant, Subscriber
+from datetime import datetime, UTC
 
 def fetch_csv(url):
     """Fetch CSV data from a URL and return it as a list of dictionaries."""
@@ -26,7 +28,7 @@ def add_subscribers_from_csv(csv_data, session):
             bib = int(row.get("Bib number", "").strip())
         except (ValueError, TypeError):
             continue  # Skip rows with invalid bib values
-        name = f"{row.get('Your Name', '<No Name>')}".strip()
+        name = f"{row.get('Your Name', '')}".strip()
         email = row.get("Email", "").strip()
 
         if not bib or not name or not email:
@@ -47,17 +49,21 @@ def add_subscribers_from_csv(csv_data, session):
             session.add(subscriber)
             session.commit()
             count_added += 1
+            add_log("SUB_WORKER", datetime.now(UTC), f"Added subscriber: {name} for bib={bib}","INFO")
             print(f"Added subscriber: {name} <{email}> for bib={bib}")
         except Exception as e:
+            add_log("SUB_WORKER", datetime.now(UTC), f"Error adding subscriber for bib={bib}: {e}","ERROR")
             print(f"Error adding subscriber: {e}")
             session.rollback()
 
     print(f"Added {count_added} subscribers to the database.")
 
-def run_sub_worker():
+def run_sub_worker(queue):
     """Run the sub-worker to fetch and add subscribers from Google Sheets."""
+    set_queue(queue)
     from db import session_factory
     from config import GOOGLE_SHEETS_CSV_URL
+    add_log("SUB_WORKER", datetime.now(UTC), "Starting sub-worker","INFO")
 
     while True:
         session = session_factory()
@@ -66,15 +72,12 @@ def run_sub_worker():
             add_subscribers_from_csv(csv_data, session)
         except Exception as e:
             print(f"Error processing subscribers: {e}")
+            add_log("SUB_WORKER", datetime.now(UTC), f"Error processing subscribers: {e}","ERROR")
         finally:
             session.close()
         sleep(10)  # Wait for 10 seconds before the next fetch
         print("Waiting 10 seconds before next fetch...")
     
-
-if __name__ == "__main__":
-    run_sub_worker()
-
     
     
 
