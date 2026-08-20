@@ -61,7 +61,8 @@ def resolve_message(session, notification):
         <p>Athlete {participant.name} has crossed the {timing_point} timing point at {timeofday}!
         <br><br>For additional information and to see their results, visit the event website at https://sportstats.one.
         <br><br>Thanks for following the race,<br>Tyler From SportStats West
-        <br><br><i>This is an automated message from SportStats West. Please do not reply to this email.</i></p>
+        <br><br><small><i>This is an automated message from SportStats West. Please do not reply to this email.
+        <br>Brought to you by the MinhT notification engine, fresh updates straight to you ;)</i></small></p>
     </body>
     """
         
