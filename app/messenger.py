@@ -52,7 +52,11 @@ def resolve_message(session, notification):
     timing_point = notification.timing_point
 
     subject = f"Timing update for Athlete {participant.name}"
-    body = f"<p>Hello {subscriber.name}!</p><p>Athlete {participant.name} has just crossed the {timing_point} timing point! </p><p> For additional information, visit the event website at https://sportstats.one.</p>"
+    body = {
+        f"<p>Hello {subscriber.name}!</p><p>Athlete {participant.name} has just crossed the {timing_point} timing point! </p>"
+        f"<p> For additional information, visit the event website at https://sportstats.one.</p>"
+        f"<p> All the best, Tyler From SportStats West</p>"
+        }
 
     return subscriber.email, subject, body
 
