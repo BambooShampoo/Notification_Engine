@@ -1,7 +1,7 @@
 # main.py
 """Main application for the Notification Engine. Runs the listener, subscription worker and dispatch worker concurrently."""
 
-from multiprocessing import Process
+from multiprocessing import Process,freeze_support
 from listener import start_listener
 from sub_worker import run_sub_worker
 from messenger import run_worker
@@ -12,6 +12,7 @@ from datetime import datetime, UTC
 
 
 if __name__ == "__main__":
+    freeze_support()  # For Windows support
     shared_log_queue = Queue()
     set_queue(shared_log_queue)  # so main.py's own add_log() calls work too
 

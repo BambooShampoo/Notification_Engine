@@ -1,11 +1,24 @@
 import os
+import sys
 from pathlib import Path
 from urllib.parse import quote
 
 from dotenv import load_dotenv
 
 # config.py lives in app/, .env lives one level up in project root
-ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+
+# Determine the base directory
+if getattr(sys, 'frozen', False):
+    # Running as a frozen executable
+    BASE_DIR = Path(sys.executable).parent
+else:
+    # Running as a script
+    BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_DIR = BASE_DIR / "data"
+DB_PATH = DATA_DIR / "database.db"
+ENV_PATH = BASE_DIR / ".env"
+
 load_dotenv(dotenv_path=ENV_PATH)
 
 RESEND_API_KEY = os.environ["RESEND_API_KEY"]
