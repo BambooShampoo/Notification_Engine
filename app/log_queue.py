@@ -1,6 +1,6 @@
 # log_queue.py 
 """A queue for logging messages. used by all three proccesses, listener,messenger, and sub_worker. a seperate process is used to keep one process responsible for 
-writing to the log table in the database. this is done to avoid multiple processes writing to the log table at the same time and causing a deadlock/ race condition."""
+writing to the log table in the database. this is done to avoid multiple processes writing to the log table at the same time and causing a race condition."""
 
 from datetime import datetime
 from multiprocessing import Queue
@@ -34,6 +34,7 @@ def write_log(queue):
             print(f"Error writing log to database: {e}")
     session.close()
 
+# In case something happened mid race and we need to trace it.
 def export_log():
     """Export log messages from the database to a txt. Writes them to data/logs_<timestamp>.txt"""
     session = session_factory()

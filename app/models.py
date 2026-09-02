@@ -27,7 +27,7 @@ class Subscriber(Base):
     bib = Column(Integer, ForeignKey("participants.bib"), nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    subscribed_at = Column(DateTime, server_default=func.now(), nullable=False)
+    subscribed_at = Column(DateTime, server_default=func.now(), nullable=False) # from the form template, cant be bothered to change what form adds
 
     __table_args__ = (
         (UniqueConstraint("bib", "email", name="uq_subscriber_bib_email")),
@@ -73,7 +73,7 @@ class Notification(Base):
 class Log(Base):
     __tablename__ = "logs"
     id = Column(Integer, primary_key=True)
-    source = Column(String, nullable=False)      # was "log_type": LISTENER, MESSENGER, etc.
+    source = Column(String, nullable=False)
     timestamp = Column(DateTime, server_default=func.now(), nullable=False)
-    message = Column(String, nullable=False)      # was "log_message"
-    severity = Column(String, nullable=True)      # optional severity level (INFO, ERROR, etc.)
+    message = Column(String, nullable=False)
+    severity = Column(String, nullable=True) # optional

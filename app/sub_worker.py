@@ -34,16 +34,15 @@ def add_subscribers_from_csv(csv_data, session):
         if not bib or not name or not email:
             continue  # Skip incomplete rows
 
+        # no way to check for valid bibs with the google form, must check here
         participant = session.query(Participant).filter_by(bib=bib).first()
         if not participant:
             # skip adding subscriber if participant does not exist
             print(f"Skipping subscriber for bib={bib} as participant does not exist.")
             continue
 
-        # Add subscriber logic here (assuming a Subscriber model exists)
         subscriber = Subscriber(bib=bib, name=name, email=email)
         if session.query(Subscriber).filter_by(bib=bib, email=email).first():
-            print(f"Subscriber already exists: {name} for bib={bib}")
             continue  # Skip if subscriber already exists
         try:
             session.add(subscriber)
@@ -68,6 +67,7 @@ def run_sub_worker(queue):
     while True:
         session = session_factory()
         try:
+            # fetching entire list each time, volume wont be big so optimization wont be nessesary *for now*
             csv_data = fetch_csv(GOOGLE_SHEETS_CSV_URL)
             add_subscribers_from_csv(csv_data, session)
         except Exception as e:

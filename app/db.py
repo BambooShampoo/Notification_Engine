@@ -33,5 +33,12 @@ print("Database tables created successfully.")
 session_factory = sessionmaker(bind=engine)
 print("Session factory created successfully.")
 
+# Delete database, dont want to keep sensitive information laying around after race is done.
+def clear_all_tables():
+    table_names = ("notifications", "subscribers", "readings", "logs", "participants")
+    with engine.begin() as connection:
+        for table_name in table_names:
+            connection.execute(Base.metadata.tables[table_name].delete())
+
 #export engine and session_factory for use in other modules
-__all__ = ["engine", "session_factory"]    
+__all__ = ["engine", "session_factory", "clear_all_tables"]

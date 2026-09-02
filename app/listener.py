@@ -16,6 +16,7 @@ from load_participants import load_participants
 HOST = "127.0.0.1"
 PORT = 3099
 DELIMITER = "\t"
+MAX_NOTIF_ATTEMPTS = 3
 
 
 def handle_client(conn, addr):
@@ -36,12 +37,13 @@ def handle_client(conn, addr):
 
             for part in parts:
                 trimmed = part.strip()
-                if trimmed:
+                if trimmed: # wont process incomplete package if pulse is too big
                     process_pulse(trimmed)
 
 def trigger_notification(session, bib, timing_point, max_retries):
     for attempt in range(max_retries):
             try:
+                # adding a pending notification for whatever bib crossed, anyone subscribed to this bib will have 'pending' notif
                 subscribers = session.query(Subscriber).filter(Subscriber.bib == bib).all()
                 for subscriber in subscribers:
                     notification = Notification(
@@ -55,8 +57,9 @@ def trigger_notification(session, bib, timing_point, max_retries):
                 session.commit()
                 print(f"Queued {len(subscribers)} notifications for bib={bib}")
                 return
+            
             except OperationalError as e:
-                session.rollback()
+                session.rollback() # Keep things atomic
                 add_log("LISTENER", datetime.now(UTC), f"DB locked, retrying ({attempt+1}/{max_retries}): {e}","ERROR")
                 print(f"DB locked, retrying ({attempt+1}/{max_retries}): {e}")
                 time.sleep(0.5 * (attempt + 1))
@@ -98,6 +101,8 @@ def process_pulse(raw):
         add_log("LISTENER", timestamp, f"Row written in Reading: bib={bib}, timing_point={timing_point}, timestamp={timestamp}","INFO")
         print(f"Row written: bib={bib}, timestamp={timestamp}")
 
+
+        # Mainly for the people at the finish line lingering near finish mat
         cutoff = timestamp - timedelta(seconds=60)
         duplicate = session.query(Reading).filter(
             Reading.bib == bib,
@@ -106,15 +111,12 @@ def process_pulse(raw):
             Reading.id != reading.id
         ).first()
 
-        
-
-
-        if duplicate:
+        if duplicate: # still keep the reading so that this works for however long dup is around finish mat or any other mat
             add_log("LISTENER", timestamp, f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.","ERROR")
             print(f"Duplicate reading found for bib={bib} within 60 seconds, skipping notification.")
         else:
-            try:
-                trigger_notification(session, bib, timing_point, 3)
+            try: # first detection
+                trigger_notification(session, bib, timing_point, MAX_NOTIF_ATTEMPTS)
             except Exception as e:
                 add_log("LISTENER", timestamp, f"Error triggering notification for bib={bib}: {e}","ERROR")
                 print(f"Error triggering notification for bib={bib}: {e}")
@@ -131,13 +133,16 @@ def process_pulse(raw):
 def start_listener(queue):
     set_queue(queue)
     add_log("LISTENER", datetime.now(UTC), "Starting listener","INFO")
+
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind((HOST, PORT))
     server.listen()
+
     add_log("LISTENER", datetime.now(UTC), f"Listening for RR14 on {HOST}:{PORT}","INFO")
     print(f"Listening for RR14 on {HOST}:{PORT}")
 
+    # Old setup only able to handle one connection, threads for races that have more than one decoder (Start, Splits, Finishes)
     while True:
         conn, addr = server.accept()
         Thread(target=handle_client, args=(conn, addr), daemon=True).start()

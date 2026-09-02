@@ -8,12 +8,13 @@ from messenger import run_worker
 from load_participants import load_participants
 from multiprocessing import Queue, Process
 from log_queue import write_log, add_log, export_log, set_queue
+from db import clear_all_tables
 from datetime import datetime, UTC
 
 
 if __name__ == "__main__":
-    freeze_support()  # For Windows support
-    shared_log_queue = Queue()
+    # freeze_support()  # For Windows support
+    shared_log_queue = Queue() # for logging consistency
     set_queue(shared_log_queue)  # so main.py's own add_log() calls work too
 
     # Load participants from CSV into the database
@@ -32,7 +33,7 @@ if __name__ == "__main__":
     dispatch_worker_process.start()
     log_process.start()
 
-    # on input "exit"from the console, terminate all processes
+    # CTRL + C froze terminal, needed a another way to close program without starting new terminal
     while True:
         user_input = input("Type 'exit' to terminate the application: ")
         if user_input.strip().lower() == "exit":
@@ -67,4 +68,12 @@ if __name__ == "__main__":
     print("All processes terminated.")
     export_log()
     add_log("MAIN", datetime.now(UTC), f"Log exported to data/logs_{datetime.now(UTC)}.txt","INFO")
+
+    # No use of data after race is comeplete, wipe to be ready for new race
+    clear_all_tables()
+    add_log("MAIN", datetime.now(UTC), f"All Tables Cleared for next race, Will populate upon running program again","INFO")
+
+
+
+
     

@@ -11,15 +11,19 @@ def load_participants():
     participants_path = Path(__file__).resolve().parent.parent / "data" / "participants.csv"
     session = session_factory()
     try:
+
+        # So that you wont have to remake entire participants table every time csv updates. (Late reg*)
         existing_bibs = {
             int(bib) for (bib,) in session.query(Participant.bib).all()
         }
+        
         with participants_path.open("r", newline="") as f:
             reader = csv.DictReader(f)
 
             for row in reader:
                 raw_bib = row["NUMBER"].strip()
                 name = f"{row['FNAME']} {row['LNAME']}".strip()
+
                 if not raw_bib.isdigit() or not name:
                     continue
 
