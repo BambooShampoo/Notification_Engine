@@ -1,10 +1,8 @@
 .env
-*.json          # service account key files - careful, this also ignores any legit JSON you add later
+*.json          # service account key files - also ignores any legit JSON added later
  
 # Data
-data/*.db
-data/*.db-wal
-data/*.db-shm
+data/
  
 # Python
 __pycache__/

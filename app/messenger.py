@@ -10,7 +10,7 @@ from log_queue import add_log, set_queue
 from db import session_factory
 from models import Notification, Subscriber, Participant
 
-POLL_INTERVAL_SECONDS = 5  # NFR-1: dispatch within 5s of ingestion
+POLL_INTERVAL_SECONDS = 5  # dispatch within 5s of ingestion
 MAX_ATTEMPTS = 3
 BACKOFF_SECONDS = 10
 
@@ -31,9 +31,6 @@ def update_notification_status(notification, succeed):
 def get_dispatchable_notifications(session):
     """
     Return Notification rows eligible to send right now:
-    - status == "pending" (never attempted), OR
-    - status == "failed" AND attempts < MAX_ATTEMPTS AND
-      (last_attempt_at is None or now - last_attempt_at >= BACKOFF_SECONDS)
     """
 
     pending_notifications = session.query(Notification).filter(Notification.status == "pending").all()
@@ -52,7 +49,6 @@ def get_dispatchable_notifications(session):
 def resolve_message(session, notification):
     """
     Build the email subject/body for this notification.
-    FR-2.2: template with [Name] resolved from Participants via notification.bib.
     """
 
     # in case sub_worker.py had loading participants

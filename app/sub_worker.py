@@ -75,8 +75,7 @@ def run_sub_worker(queue):
             add_log("SUB_WORKER", datetime.now(UTC), f"Error processing subscribers: {e}","ERROR")
         finally:
             session.close()
-        sleep(10)  # Wait for 10 seconds before the next fetch
-        print("Waiting 10 seconds before next fetch...")
+        sleep(10)  # Updates from the google sheet wont be translated until we poll it, must do this constantly
     
     
     

@@ -1,5 +1,5 @@
 # main.py
-"""Main application for the Notification Engine. Runs the listener, subscription worker and dispatch worker concurrently."""
+"""Main application for the Notification Engine. Runs the listener, logger,subscription worker and dispatch worker concurrently."""
 
 from multiprocessing import Process,freeze_support
 from listener import start_listener
@@ -13,7 +13,8 @@ from datetime import datetime, UTC
 
 
 if __name__ == "__main__":
-    # freeze_support()  # For Windows support
+    ## For Windows support, trying to package thing so that device that doesnt have IDE and python install can just run
+    # freeze_support()  
     shared_log_queue = Queue() # for logging consistency
     set_queue(shared_log_queue)  # so main.py's own add_log() calls work too
 
@@ -24,7 +25,7 @@ if __name__ == "__main__":
 
     # Start the listener, subscription worker, and dispatch worker in separate processes
     listener_process = Process(target=start_listener, args=(shared_log_queue,))
-    sub_worker_process = Process(target=run_sub_worker, args=(shared_log_queue,))
+    sub_worker_process = Process(target=run_sub_worker, args=(shared_log_queue,)) # for new subscribers mid race
     dispatch_worker_process = Process(target=run_worker, args=(shared_log_queue,))
     log_process = Process(target=write_log, args=(shared_log_queue,))
 
@@ -52,11 +53,11 @@ if __name__ == "__main__":
         process.terminate()
 
     log_process.join(timeout=5)
+
     if log_process.is_alive():
-        add_log("MAIN", datetime.now(UTC), "Warning: log process did not exit cleanly, forcing termination","WARNING")
         print("Warning: log process did not exit cleanly, forcing termination")
-    log_process.terminate()
-    log_process.join()
+        log_process.terminate()
+        log_process.join()
     
     for process in (
         listener_process,
@@ -64,14 +65,17 @@ if __name__ == "__main__":
         dispatch_worker_process
     ):
         process.join()
+    
     add_log("MAIN", datetime.now(UTC), "All processes terminated","INFO")
     print("All processes terminated.")
+
+    # We'll have no way to conduct an analysis of how engine ran otherwise 
     export_log()
     add_log("MAIN", datetime.now(UTC), f"Log exported to data/logs_{datetime.now(UTC)}.txt","INFO")
 
     # No use of data after race is comeplete, wipe to be ready for new race
-    clear_all_tables()
-    add_log("MAIN", datetime.now(UTC), f"All Tables Cleared for next race, Will populate upon running program again","INFO")
+    # clear_all_tables()
+    # add_log("MAIN", datetime.now(UTC), f"All Tables Cleared for next race, Will populate upon running program again","INFO")
 
 
 

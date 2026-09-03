@@ -7,6 +7,7 @@ from pathlib import Path
 from models import Participant
 from db import session_factory
 
+# IF ANY LATE REG, JUST RUN THIS STANDALONE IN NEW TERMINAL***
 def load_participants():
     participants_path = Path(__file__).resolve().parent.parent / "data" / "participants.csv"
     session = session_factory()
@@ -16,7 +17,7 @@ def load_participants():
         existing_bibs = {
             int(bib) for (bib,) in session.query(Participant.bib).all()
         }
-        
+
         with participants_path.open("r", newline="") as f:
             reader = csv.DictReader(f)
 
