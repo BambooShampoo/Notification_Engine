@@ -134,6 +134,7 @@ def process_notification(session, notification):
         update_notification_status(notification, False)
         notification.error_message = error_message
         add_log("MESSENGER", datetime.now(UTC), f"Notification id={notification.id} failed: {error_message}","ERROR")
+        
         if notification.attempts >= MAX_ATTEMPTS:
             add_log("MESSENGER", datetime.now(UTC), f"Notification id={notification.id} failed after {MAX_ATTEMPTS} attempts. Giving up.","ERROR")
             print(f"Notification id={notification.id} failed after {MAX_ATTEMPTS} attempts. Giving up.")

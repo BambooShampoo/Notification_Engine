@@ -16,7 +16,7 @@ else:
     BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATA_DIR = BASE_DIR / "data"
-DB_PATH = DATA_DIR / "database.db"
+DB_PATH = DATA_DIR / "sportstats.db"
 ENV_PATH = BASE_DIR / ".env"
 
 load_dotenv(dotenv_path=ENV_PATH)
@@ -33,5 +33,5 @@ GOOGLE_SHEETS_CSV_URL = (os.environ.get("GOOGLE_SHEETS_CSV_URL") or
 LISTENER_HOST = os.environ.get("LISTENER_HOST", "127.0.0.1")
 LISTENER_PORT = int(os.environ.get("LISTENER_PORT", 3099))
 
-ADMIN_API_HOST = os.environ.get("ADMIN_API_HOST", "0.0.0.0")
+ADMIN_API_HOST = os.environ.get("ADMIN_API_HOST", "127.0.0.1")
 ADMIN_API_PORT = int(os.environ.get("ADMIN_API_PORT", 8000))

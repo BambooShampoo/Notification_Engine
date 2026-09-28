@@ -11,7 +11,6 @@ from datetime import datetime, UTC, timedelta
 from log_queue import set_queue, add_log
 from db import session_factory
 from models import Notification, Reading, Subscriber
-from load_participants import load_participants
 
 HOST = "127.0.0.1"
 PORT = 3099
@@ -26,10 +25,12 @@ def handle_client(conn, addr):
     with conn:
         while True:
             data = conn.recv(4096)
+
             if not data:
                 add_log("LISTENER", datetime.now(UTC), "RR14 disconnected","INFO")
                 print("RR14 disconnected")
                 break
+            
             buffer += data.decode("utf-8", errors="replace")
 
             parts = buffer.split(DELIMITER)
@@ -99,7 +100,7 @@ def process_pulse(raw):
         session.add(reading)
         session.commit()
         add_log("LISTENER", timestamp, f"Row written in Reading: bib={bib}, timing_point={timing_point}, timestamp={timestamp}","INFO")
-        print(f"Row written: bib={bib}, timestamp={timestamp}")
+        # print(f"Row written: bib={bib}, timestamp={timestamp}")
 
 
         # Mainly for the people at the finish line lingering near finish mat

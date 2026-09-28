@@ -6,6 +6,7 @@ from datetime import datetime
 from multiprocessing import Queue
 from db import session_factory
 from models import Log
+from config import DATA_DIR
 
 log_queue = None  # will be set by set_queue() in each process
 
@@ -38,10 +39,18 @@ def write_log(queue):
 def export_log():
     """Export log messages from the database to a txt. Writes them to data/logs_<timestamp>.txt"""
     session = session_factory()
-    logs = session.query(Log).all()
-    with open(f"data/logs_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt", "w") as f:
-        for log in logs:
-            f.write(f"{log.timestamp}: [{log.severity}] {log.source} - {log.message}\n")
-    session.close()
 
-__all__ = ["add_log", "export_log"]
+    try:
+        logs = session.query(Log).order_by(Log.timestamp.asc(), Log.id).all()
+        filedir = f"logs_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+        outpath = DATA_DIR/filedir
+        with open(outpath, "w", encoding="utf-8") as f:
+            for log in logs:
+                f.write(f"{log.timestamp}: [{log.severity}] {log.source} - {log.message}\n")
+
+    finally:
+        session.close()
+
+    return outpath
+
+__all__ = ["add_log", "export_log", "write_log", "set_queue"]

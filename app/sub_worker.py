@@ -54,8 +54,9 @@ def add_subscribers_from_csv(csv_data, session):
             add_log("SUB_WORKER", datetime.now(UTC), f"Error adding subscriber for bib={bib}: {e}","ERROR")
             print(f"Error adding subscriber: {e}")
             session.rollback()
-
-    print(f"Added {count_added} subscribers to the database.")
+            
+    if count_added > 0:
+        print(f"Added {count_added} subscribers to the database.")
 
 def run_sub_worker(queue):
     """Run the sub-worker to fetch and add subscribers from Google Sheets."""
