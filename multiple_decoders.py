@@ -14,27 +14,27 @@ PORT = 3099
 
 # seperate pulses for each timing point, each pulse should be a string that ends with the \t delimiter your listener splits on. The pulses should be in the format of the JSON object that the listener expects.
 PULSES_START = [
-    '{"ID":115,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6767}\t',
-    '{"ID":110,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8398}\t',
-    '{"ID":100,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
-    '{"ID":105,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":7}\t',
-    '{"ID":108,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6868}\t',
+    '{"ID":115,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
+    '{"ID":110,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":2}\t',
+    '{"ID":100,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":3}\t',
+    '{"ID":105,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":67}\t',
+    '{"ID":108,"PID":8,"TimingPoint":"START","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8826}\t',
 ]
 
 PULSES_SPLIT1 = [
-    '{"ID":115,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6767}\t',
-    '{"ID":110,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8398}\t',
-    '{"ID":100,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
-    '{"ID":105,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":7}\t',
-    '{"ID":108,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6868}\t',
+    '{"ID":115,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
+    '{"ID":110,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":2}\t',
+    '{"ID":100,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":3}\t',
+    '{"ID":105,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":67}\t',
+    '{"ID":108,"PID":8,"TimingPoint":"SPLIT1","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8826}\t',
 ]
 
 PULSES_FINISH = [
-    '{"ID":115,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6767}\t',
-    '{"ID":116,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8398}\t',
-    '{"ID":117,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8397}\t',
-    '{"ID":118,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":7}\t',
-    '{"ID":119,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":6868}\t',
+    '{"ID":115,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":1}\t',
+    '{"ID":116,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":2}\t',
+    '{"ID":117,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":3}\t',
+    '{"ID":118,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":67}\t',
+    '{"ID":119,"PID":8,"TimingPoint":"FINISH","Result":-10,"Time":56440.841,"Invalid":false,"Bib":8826}\t',
 ]
 
 # Pulse should depend on what tming point the decoder is simulating. For example, if the decoder is simulating a START timing point, it should send pulses for all bib numbers at the START timing point. If the decoder is simulating a FINISH timing point, it should send pulses for all bib numbers at the FINISH timing point, and so on.

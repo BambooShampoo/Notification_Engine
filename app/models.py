@@ -25,7 +25,7 @@ class Subscriber(Base):
 
     id = Column(Integer, primary_key=True)
     bib = Column(Integer, ForeignKey("participants.bib"), nullable=False)
-    name = Column(String, nullable=False)
+    #name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     subscribed_at = Column(DateTime, server_default=func.now(), nullable=False) # from the form template, cant be bothered to change what form adds
 

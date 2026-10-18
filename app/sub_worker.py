@@ -28,10 +28,11 @@ def add_subscribers_from_csv(csv_data, session):
             bib = int(row.get("Bib number", "").strip())
         except (ValueError, TypeError):
             continue  # Skip rows with invalid bib values
-        name = f"{row.get('Your Name', '')}".strip()
+        #name = f"{row.get('Your Name', '')}".strip()
         email = row.get("Email", "").strip()
 
-        if not bib or not name or not email:
+        if not bib or not email:
+        #if not bib or not name or not email:
             continue  # Skip incomplete rows
 
         # no way to check for valid bibs with the google form, must check here
@@ -41,15 +42,17 @@ def add_subscribers_from_csv(csv_data, session):
             print(f"Skipping subscriber for bib={bib} as participant does not exist.")
             continue
 
-        subscriber = Subscriber(bib=bib, name=name, email=email)
+        #subscriber = Subscriber(bib=bib, name=name, email=email)
+        subscriber = Subscriber(bib=bib, email=email)
+
         if session.query(Subscriber).filter_by(bib=bib, email=email).first():
             continue  # Skip if subscriber already exists
         try:
             session.add(subscriber)
             session.commit()
             count_added += 1
-            add_log("SUB_WORKER", datetime.now(UTC), f"Added subscriber: {name} for bib={bib}","INFO")
-            print(f"Added subscriber: {name} <{email}> for bib={bib}")
+            add_log("SUB_WORKER", datetime.now(UTC), f"Added subscriber for bib={bib}","INFO")
+            print(f"Added subscriber: <{email}> for bib={bib}")
         except Exception as e:
             add_log("SUB_WORKER", datetime.now(UTC), f"Error adding subscriber for bib={bib}: {e}","ERROR")
             print(f"Error adding subscriber: {e}")
